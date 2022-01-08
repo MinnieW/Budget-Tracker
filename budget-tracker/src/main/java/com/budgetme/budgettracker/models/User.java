@@ -1,5 +1,6 @@
 package com.budgetme.budgettracker.models;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,17 +16,17 @@ public class User {
     @GeneratedValue
     private int id;
 
-    @NotNull(message = "Username is required")
+    @NotEmpty(message = "Username is required")
     private String username;
 
-    @NotNull(message = "Password is required")
+    @NotEmpty(message = "Password is required")
     private String password;
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public User(String username, String password) {
+    public User(String username, String hash) {
         this.username = username;
-        this.password = encoder.encode(password);
+        this.password = encoder.encode(hash);
     }
 
     public User(){}

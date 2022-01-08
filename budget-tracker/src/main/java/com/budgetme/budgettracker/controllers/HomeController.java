@@ -33,7 +33,7 @@ public class HomeController {
     }
 
     @PostMapping("register")
-    public String processRegistration(@ModelAttribute @Valid User newUser, Errors errors, Model model){
+    public String processRegistration(@ModelAttribute @Valid User newUser, Errors errors){
 
         if(errors.hasErrors()){
             return "register";
