@@ -38,7 +38,8 @@ public class EventController {
     }
 
     @GetMapping("home")
-    public String eventHomePage(){
+    public String eventHomePage(Model model){
+        model.addAttribute("events",eventRepository.findAll());
         return "events/home";
     }
 }
