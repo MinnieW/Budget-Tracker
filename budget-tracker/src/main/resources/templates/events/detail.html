@@ -11,5 +11,27 @@
 <body>
 <div th:replace="fragments :: pagetop"></div>
 
+<h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2 align="center">Expenses</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="col">
+            <h2 align="center" th:text="'Total Budget: $' + ${event.budget}"></h2>
+        </div>
+    </div>
+</div>
 </body>
 </html>
