@@ -22,11 +22,11 @@ public class User {
     @NotEmpty(message = "Password is required")
     private String password;
 
-    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public User(String username, String hash) {
         this.username = username;
-        this.password = encoder.encode(hash);
+        this.password = hash;
     }
 
     public User(){}

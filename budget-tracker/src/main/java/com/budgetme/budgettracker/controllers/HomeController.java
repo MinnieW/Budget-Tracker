@@ -3,6 +3,7 @@ package com.budgetme.budgettracker.controllers;
 import com.budgetme.budgettracker.data.UserRepository;
 import com.budgetme.budgettracker.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -18,6 +19,8 @@ public class HomeController {
 
     @Autowired
     private UserRepository userRepository;
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @RequestMapping("/")
     public String index(){
@@ -38,7 +41,7 @@ public class HomeController {
         if(errors.hasErrors()){
             return "register";
         }
-
+        newUser.setPassword(encoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
         return "index";
     }
