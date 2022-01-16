@@ -26,7 +26,12 @@
                         <th>Delete</th>
                     </tr>
                 </thead>
+                <tr th:each="expenses : ${expense}">
+                    <td th:text="${expenses.name}"></td>
+                    <td th:text="${expenses.amount}"></td>
+                </tr>
             </table>
+            <button th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
         </div>
         <div class="col">
             <h2 align="center" th:text="'Total Budget: $' + ${event.budget}"></h2>

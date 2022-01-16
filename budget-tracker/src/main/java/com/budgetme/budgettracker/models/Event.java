@@ -5,8 +5,11 @@ package com.budgetme.budgettracker.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Event {
@@ -20,6 +23,9 @@ public class Event {
 
     @Min(value=1, message = "Budget must be a number greater than 1")
     private int budget;
+
+    @OneToMany(mappedBy = "event")
+    private List<Expense> expesne = new ArrayList<>();
 
     public Event(String name, int budget) {
         this.name = name;
@@ -43,6 +49,14 @@ public class Event {
     public void setBudget(int budget) {
         this.budget = budget;
     }
+
+    public List<Expense> getExpesne() {
+        return expesne;
+    }
+
+//    public void setExpesne(List<Expense> expesne) {
+//        this.expesne = expesne;
+//    }
 
     public int getId() {
         return id;
