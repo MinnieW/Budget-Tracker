@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -50,23 +51,11 @@ public class EventController {
     public String viewSpecificEvent(@RequestParam Integer eventId, Model model){
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
+        List<Expense> expense = expenseRepository.findByEventId(eventId);
         model.addAttribute("event", event);
+        model.addAttribute("expense",expense);
         return "events/detail";
     }
 
-//    @GetMapping("detail/expense")
-//    public String createExpense(@RequestParam Integer eventId, Model model){
-//        model.addAttribute("title", "Create Expense");
-//        model.addAttribute(new Expense());
-//        return "events/expense";
-//    }
-//
-//    @PostMapping("detail/expense")
-//    public String processExpense(@ModelAttribute @Valid Expense expense,@RequestParam Integer eventId, Errors errors){
-//        if (errors.hasErrors()){
-//            return "detail/expense";
-//        }
-//
-//        return "events/expense";
-//    }
+
 }

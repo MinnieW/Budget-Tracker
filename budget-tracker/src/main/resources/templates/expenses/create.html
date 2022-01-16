@@ -7,7 +7,9 @@
 <body>
 <div th:replace="fragments :: pagetop"></div>
 
-<form method="post" action="/expenses/create">
+<h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
+
+<form method="post">
     <div>
         <label>Expense Name
             <input th:field="${expense.name}">
