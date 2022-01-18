@@ -58,7 +58,7 @@ public class EventController {
 
         BigDecimal sumPaid = new BigDecimal(0);
         for (int i=0; i < expense.size(); i++){
-            sumPaid.add(expense.get(i).getAmount()) ;
+            sumPaid = sumPaid.add(expense.get(i).getAmount()) ;
         }
         model.addAttribute("amount",sumPaid);
         return "events/detail";
