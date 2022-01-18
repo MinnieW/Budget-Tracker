@@ -11,6 +11,7 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +55,12 @@ public class EventController {
         List<Expense> expense = expenseRepository.findByEventId(eventId);
         model.addAttribute("event", event);
         model.addAttribute("expense",expense);
+
+        BigDecimal sumPaid = new BigDecimal(0);
+        for (int i=0; i < expense.size(); i++){
+            sumPaid.add(expense.get(i).getAmount()) ;
+        }
+        model.addAttribute("amount",sumPaid);
         return "events/detail";
     }
 

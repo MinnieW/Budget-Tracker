@@ -8,6 +8,7 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 public class Expense {
@@ -55,6 +56,14 @@ public class Expense {
     public void setEvent(Event event) {
         this.event = event;
     }
+
+//    public BigDecimal totalAmount(List<Expense> paid){
+//        BigDecimal sumPaid = BigDecimal.ZERO;
+//        for (int i = 0; i < paid.size(); i++){
+//            sumPaid += paid.get(i).amount;
+//        }
+//        return sumPaid;
+//    }
 
     public int getId() {
         return id;
