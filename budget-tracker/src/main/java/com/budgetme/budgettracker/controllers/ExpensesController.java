@@ -45,4 +45,27 @@ public class ExpensesController {
         expenseRepository.save(newExpense);
         return "events/home";
     }
+
+    @GetMapping("edit")
+    public String editExpense(@RequestParam Integer expenseId, Model model){
+        Optional<Expense> result = expenseRepository.findById(expenseId);
+        Expense expense = result.get();
+        model.addAttribute("title", "Create Expense");
+        model.addAttribute("expense",expense);
+        return "expenses/edit";
+    }
+
+    @PostMapping("edit")
+    public String processEditExpense(@ModelAttribute @Valid Expense editExpense, @RequestParam Integer expenseId, Errors errors){
+        if (errors.hasErrors()){
+            return "redirect:edit";
+        }
+
+        Optional<Expense> result = expenseRepository.findById(expenseId);
+        Expense expense = result.get();
+        expense.setName(editExpense.getName());
+        expense.setAmount(editExpense.getAmount());
+        expenseRepository.save(expense);
+        return "events/home";
+    }
 }

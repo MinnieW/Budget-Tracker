@@ -23,6 +23,9 @@
                 <tr th:each="expenses : ${expense}">
                     <td th:text="${expenses.name}"></td>
                     <td th:text="${expenses.amount}"></td>
+                    <td>
+                        <a th:href="'/expenses/edit?expenseId=' + ${expenses.id}">Edit</a>
+                    </td>
                 </tr>
             </table>
             <button th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
