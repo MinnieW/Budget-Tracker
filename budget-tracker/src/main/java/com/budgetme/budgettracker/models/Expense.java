@@ -57,14 +57,6 @@ public class Expense {
         this.event = event;
     }
 
-//    public BigDecimal totalAmount(List<Expense> paid){
-//        BigDecimal sumPaid = BigDecimal.ZERO;
-//        for (int i = 0; i < paid.size(); i++){
-//            sumPaid += paid.get(i).amount;
-//        }
-//        return sumPaid;
-//    }
-
     public int getId() {
         return id;
     }
