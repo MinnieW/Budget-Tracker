@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+   <div th:replace="fragments :: pagetop"></div>
+   <form method="post">
+      <div>
+         <h1 align="center">Are you sure you want to delete this expense?</h1>
+      </div>
+      <div>
+         <p th:text="${expense.name}"></p>
+         <p th:text="${expense.amount}"></p>
+      </div>
+      <div>
+         <button type="submit" name="expenseId" th:value="${expense.id}" class="btn btn-danger">Delete</button>
+      </div>
+   </form>
+</body>
+</html>

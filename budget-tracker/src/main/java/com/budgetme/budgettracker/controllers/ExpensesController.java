@@ -68,4 +68,18 @@ public class ExpensesController {
         expenseRepository.save(expense);
         return "events/home";
     }
+
+    @GetMapping("delete")
+    public String deleteExpense(@RequestParam Integer expenseId, Model model){
+        Optional<Expense> result = expenseRepository.findById(expenseId);
+        Expense expense = result.get();
+        model.addAttribute("expense",expense);
+        return "expenses/delete";
+    }
+
+    @PostMapping("delete")
+    public String processDeleteExpense(@RequestParam Integer expenseId){
+        expenseRepository.deleteById(expenseId);
+        return "events/home";
+    }
 }
