@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body>
+<div th:replace="fragments :: pagetop"></div>
+
+<h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h2 align="center">Expenses</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tr th:each="expenses : ${expense}">
+                    <td th:text="${expenses.name}"></td>
+                    <td th:text="${expenses.amount}"></td>
+                    <td>
+                        <a th:href="'/expenses/edit?expenseId=' + ${expenses.id}">Edit</a>
+                    </td>
+                    <td>
+                        <a th:href="'/expenses/delete?expenseId=' + ${expenses.id}">Delete</a>
+                    </td>
+                </tr>
+            </table>
+            <button th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
+        </div>
+        <div class="col">
+            <h2 align="center" th:text="'Total Budget: $' + ${event.budget}"></h2>
+            <div class="progress">
+                <div class="progress-bar bg-success" role="progressbar" th:style="'width:'+${100-((event.budget-amount)/event.budget*100)}+'%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" th:text="${100-((event.budget-amount)/event.budget*100)}+'%'"></div>
+            </div>
+            <p align="center" th:text="'Amount spent: $' + ${amount}"></p>
+            <p align="center" th:text="'Amount left: $' + ${event.budget-amount}"></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
