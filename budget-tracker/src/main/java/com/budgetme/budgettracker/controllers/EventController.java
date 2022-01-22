@@ -39,7 +39,7 @@ public class EventController {
         }
 
         eventRepository.save(newEvent);
-        return "events/home";
+        return "redirect:detail?eventId=" + newEvent.getId();
     }
 
     @GetMapping("home")

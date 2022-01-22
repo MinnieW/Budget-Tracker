@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -34,7 +35,8 @@ public class ExpensesController {
     }
 
     @PostMapping("create")
-    public String processExpense(@ModelAttribute @Valid Expense newExpense, @RequestParam Integer eventId, Errors errors){
+    public String processExpense(@ModelAttribute @Valid Expense newExpense, @RequestParam Integer eventId,
+                                 Errors errors){
         if (errors.hasErrors()){
             return "redirect:create";
         }
@@ -43,7 +45,8 @@ public class ExpensesController {
         Event event = result.get();
         newExpense.setEvent(event);
         expenseRepository.save(newExpense);
-        return "events/home";
+        return "redirect:/events/detail?eventId=" + event.getId();
+
     }
 
     @GetMapping("edit")
@@ -66,7 +69,7 @@ public class ExpensesController {
         expense.setName(editExpense.getName());
         expense.setAmount(editExpense.getAmount());
         expenseRepository.save(expense);
-        return "events/home";
+        return "redirect:/events/detail?eventId=" + expense.getEvent().getId();
     }
 
     @GetMapping("delete")
@@ -79,7 +82,9 @@ public class ExpensesController {
 
     @PostMapping("delete")
     public String processDeleteExpense(@RequestParam Integer expenseId){
+        Optional<Expense> result = expenseRepository.findById(expenseId);
+        Expense expense = result.get();
         expenseRepository.deleteById(expenseId);
-        return "events/home";
+        return "redirect:/events/detail?eventId=" + expense.getEvent().getId();
     }
 }
