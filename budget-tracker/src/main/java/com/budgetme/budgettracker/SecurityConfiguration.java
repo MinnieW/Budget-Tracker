@@ -26,7 +26,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(new BCryptPasswordEncoder());
-//        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
         return provider;
     }
 
@@ -35,8 +34,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //        http.csrf().disable()
 //                .authorizeRequests()
 //                .antMatchers("/register").permitAll();
-////        http.authorizeRequests()
-////                .antMatchers("/register").permitAll();
 //    }
 
 //    @Override
