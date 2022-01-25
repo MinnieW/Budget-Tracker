@@ -19,8 +19,13 @@
         <p th:errors="${event.budget}"></p>
     </div>
 
-    <div>
-        <input type="submit" value="Create Event">
+    <div class="row">
+        <div class="col">
+            <input type="submit" value="Create Event" class="btn btn-success">
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-secondary" onclick="location.href='/events/home'">Cancel</button>
+        </div>
     </div>
 </form>
 

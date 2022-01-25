@@ -11,8 +11,13 @@
          <p th:text="${expense.name}"></p>
          <p th:text="${expense.amount}"></p>
       </div>
-      <div>
-         <button type="submit" name="expenseId" th:value="${expense.id}" class="btn btn-danger">Delete</button>
+      <div class="row">
+         <div class="col">
+            <button type="submit" name="expenseId" th:value="${expense.id}" class="btn btn-danger">Delete</button>
+         </div>
+         <div class="col">
+            <button type="button" class="btn btn-secondary" th:onclick="history.back()">Cancel</button>
+         </div>
       </div>
    </form>
 </body>
