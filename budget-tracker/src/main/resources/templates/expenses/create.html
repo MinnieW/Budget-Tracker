@@ -21,8 +21,13 @@
         <p th:errors="${expense.amount}"></p>
     </div>
 
-    <div>
-        <input type="submit" value="Add Expense">
+    <div class="row">
+        <div class="col">
+            <input type="submit" value="Add Expense" class="btn btn-success">
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-secondary" th:onclick="|window.location.href='/events/detail?eventId=' + ${event.id}|">Cancel</button>
+        </div>
     </div>
 </form>
 
