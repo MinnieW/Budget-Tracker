@@ -2,6 +2,7 @@ package com.budgetme.budgettracker;
 
 
 import ch.qos.logback.core.joran.action.NOPAction;
+import org.hibernate.metamodel.model.domain.ManagedDomainType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +41,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
         .authorizeRequests()
-        .antMatchers("/**").permitAll();
+//        .antMatchers("/**").permitAll();
+        .antMatchers("/register", "/login").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .formLogin()
+                .defaultSuccessUrl("/events/home",true);
     }
 
 }

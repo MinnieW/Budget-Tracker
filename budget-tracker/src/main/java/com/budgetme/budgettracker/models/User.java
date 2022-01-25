@@ -1,5 +1,6 @@
 package com.budgetme.budgettracker.models;
 
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -8,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -22,7 +25,8 @@ public class User {
     @NotEmpty(message = "Password is required")
     private String password;
 
-//    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    @OneToMany(mappedBy = "user")
+    private List<Event> event = new ArrayList<>();
 
     public User(String username, String hash) {
         this.username = username;
@@ -53,5 +57,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Event> getEvent() {
+        return event;
+    }
+
+    public void setEvent(List<Event> event) {
+        this.event = event;
     }
 }
