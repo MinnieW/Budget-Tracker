@@ -2,10 +2,7 @@ package com.budgetme.budgettracker.models;
 
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
@@ -26,6 +23,10 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private List<Expense> expesne = new ArrayList<>();
+
+
+    @ManyToOne
+    private User user;
 
     public Event(String name, int budget) {
         this.name = name;
@@ -57,6 +58,14 @@ public class Event {
 //    public void setExpesne(List<Expense> expesne) {
 //        this.expesne = expesne;
 //    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public int getId() {
         return id;
