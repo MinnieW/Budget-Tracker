@@ -28,17 +28,15 @@ public class ExpensesController {
     public String createExpense(@RequestParam Integer eventId, Model model){
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
-        model.addAttribute("title", "Create Expense");
-        model.addAttribute("event",event);
+        model.addAttribute("event", event);
         model.addAttribute(new Expense());
         return "expenses/create";
     }
 
     @PostMapping("create")
-    public String processExpense(@ModelAttribute @Valid Expense newExpense, @RequestParam Integer eventId,
-                                 Errors errors){
+    public String processExpense(@ModelAttribute @Valid Expense newExpense, Errors errors, @RequestParam Integer eventId){
         if (errors.hasErrors()){
-            return "redirect:create";
+            return "expenses/create";
         }
 
         Optional<Event> result = eventRepository.findById(eventId);
@@ -59,9 +57,9 @@ public class ExpensesController {
     }
 
     @PostMapping("edit")
-    public String processEditExpense(@ModelAttribute @Valid Expense editExpense, @RequestParam Integer expenseId, Errors errors){
+    public String processEditExpense(@ModelAttribute @Valid Expense editExpense, Errors errors, @RequestParam Integer expenseId){
         if (errors.hasErrors()){
-            return "redirect:edit";
+            return "expenses/edit";
         }
 
         Optional<Expense> result = expenseRepository.findById(expenseId);
