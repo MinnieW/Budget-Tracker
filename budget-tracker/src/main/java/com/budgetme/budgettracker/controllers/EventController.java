@@ -33,6 +33,14 @@ public class EventController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("home")
+    public String eventHomePage(Model model, Principal principal){
+        User currentUser = userRepository.findByName(principal.getName());
+        List<Event> events = eventRepository.findByUserId(currentUser.getId());
+        model.addAttribute("events",events);
+        return "events/home";
+    }
+
     @GetMapping("create")
     public String createEvent(Model model){
         model.addAttribute("title", "Create Event");
@@ -52,12 +60,27 @@ public class EventController {
         return "redirect:detail?eventId=" + newEvent.getId();
     }
 
-    @GetMapping("home")
-    public String eventHomePage(Model model, Principal principal){
-        User currentUser = userRepository.findByName(principal.getName());
-        List<Event> events = eventRepository.findByUserId(currentUser.getId());
-        model.addAttribute("events",events);
-        return "events/home";
+    @GetMapping("edit")
+    public String editEvent(@RequestParam Integer eventId, Model model){
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        model.addAttribute("event",event);
+//        model.addAttribute(new Event());
+        return "events/edit";
+    }
+
+    @PostMapping("edit")
+    public String processEditEvent(@ModelAttribute @Valid Event editEvent, Errors errors, @RequestParam Integer eventId){
+        if (errors.hasErrors()){
+            return "events/edit";
+        }
+
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        event.setName(editEvent.getName());
+        event.setBudget(editEvent.getBudget());
+        eventRepository.save(event);
+        return "redirect:detail?eventId=" + event.getId();
     }
 
     @GetMapping("detail")

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: pagetop"></div>
+
+<form method="post">
+    <div>
+        <label>Event Name
+            <input th:field="${event.name}">
+        </label>
+        <p th:errors="${event.name}"></p>
+    </div>
+
+    <div>
+        <label>Budget $
+            <input th:field="${event.budget}">
+        </label>
+        <p th:errors="${event.budget}"></p>
+    </div>
+    <div class="=row">
+        <div class="col">
+            <input type="submit" value="Update Event" class="btn btn-success">
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-secondary" th:onclick="history.back()">Cancel</button>
+        </div>
+    </div>
+
+</form>
+</body>
+</html>

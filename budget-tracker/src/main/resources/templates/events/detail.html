@@ -6,7 +6,7 @@
 <div th:replace="fragments :: pagetop"></div>
 
 <h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
-
+<a th:href="'/events/edit?eventId=' + ${event.id}">Edit</a>
 <div class="container">
     <div class="row">
         <div class="col">
@@ -33,6 +33,7 @@
             </table>
             <button th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
         </div>
+
         <div class="col">
             <h2 align="center" th:text="'Total Budget: $' + ${event.budget}"></h2>
             <div class="progress" th:if="${event.budget >= amount}">
