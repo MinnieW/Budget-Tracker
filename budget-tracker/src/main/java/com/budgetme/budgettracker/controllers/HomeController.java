@@ -22,9 +22,9 @@ public class HomeController {
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @RequestMapping("/")
-    public String index(){
-        return "index";
+    @RequestMapping("home")
+    public String homePage(){
+        return "home";
     }
 
     @GetMapping("register")
@@ -43,6 +43,6 @@ public class HomeController {
         }
         newUser.setPassword(encoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
-        return "index";
+        return "home";
     }
 }
