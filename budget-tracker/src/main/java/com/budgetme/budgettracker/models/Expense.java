@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Expense {
     private String name;
 
     @DecimalMin(value = "0.00", message = "Amount must be greater than 0.")
+    @NotNull(message = "Must enter an amount")
     private BigDecimal amount;
 
     @ManyToOne
