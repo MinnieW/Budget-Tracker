@@ -27,6 +27,9 @@ public class HomeController {
         return "home";
     }
 
+    @RequestMapping("denied")
+    public String deniedPage(){return "denied";}
+
     @GetMapping("register")
     public String registration(Model model){
         model.addAttribute("title","Registration");
