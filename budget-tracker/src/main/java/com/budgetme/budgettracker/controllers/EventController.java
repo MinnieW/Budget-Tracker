@@ -61,9 +61,14 @@ public class EventController {
     }
 
     @GetMapping("edit")
-    public String editEvent(@RequestParam Integer eventId, Model model){
+    public String editEvent(@RequestParam Integer eventId, Model model, Principal principal){
+        User currentUser = userRepository.findByName(principal.getName());
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
+
+        if (!event.getUser().equals(currentUser)){
+            return "redirect:/denied";
+        }
         model.addAttribute("event",event);
 //        model.addAttribute(new Event());
         return "events/edit";
@@ -84,9 +89,14 @@ public class EventController {
     }
 
     @GetMapping("detail")
-    public String viewSpecificEvent(@RequestParam Integer eventId, Model model){
+    public String viewSpecificEvent(@RequestParam Integer eventId, Model model, Principal principal){
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
+        User currentUser = userRepository.findByName(principal.getName());
+        if (!event.getUser().equals(currentUser)){
+            return "redirect:/denied";
+        }
+
         List<Expense> expense = expenseRepository.findByEventId(eventId);
         model.addAttribute("event", event);
         model.addAttribute("expense",expense);
