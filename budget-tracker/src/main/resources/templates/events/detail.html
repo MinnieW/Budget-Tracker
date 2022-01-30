@@ -6,7 +6,13 @@
 <div th:replace="fragments :: pagetop"></div>
 
 <h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
-<a th:href="'/events/edit?eventId=' + ${event.id}">Edit</a>
+<a th:if="${!event.archive}" th:href="'/events/edit?eventId=' + ${event.id}">Edit</a>
+<form method="post" action="/events/detail" th:if="${!event.archive}">
+    <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-warning">Archive Event</button>
+</form>
+<form method="post" action="/events/detail" th:if="${event.archive}">
+    <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-warning">Unarchive Event</button>
+</form>
 <div class="container">
     <div class="row">
         <div class="col">
@@ -16,22 +22,22 @@
                     <tr>
                         <th>Name</th>
                         <th>Amount</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th th:if="${!event.archive}">Edit</th>
+                        <th th:if="${!event.archive}">Delete</th>
                     </tr>
                 </thead>
                 <tr th:each="expenses : ${expense}">
                     <td th:text="${expenses.name}"></td>
                     <td th:text="${expenses.amount}"></td>
-                    <td>
+                    <td th:if="${!event.archive}">
                         <a th:href="'/expenses/edit?expenseId=' + ${expenses.id}">Edit</a>
                     </td>
-                    <td>
+                    <td th:if="${!event.archive}">
                         <a th:href="'/expenses/delete?expenseId=' + ${expenses.id}">Delete</a>
                     </td>
                 </tr>
             </table>
-            <button th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
+            <button th:if="${!event.archive}" th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
         </div>
 
         <div class="col">
