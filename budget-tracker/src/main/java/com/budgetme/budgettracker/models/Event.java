@@ -24,9 +24,10 @@ public class Event {
     @OneToMany(mappedBy = "event")
     private List<Expense> expesne = new ArrayList<>();
 
-
     @ManyToOne
     private User user;
+
+    private Boolean archive = false;
 
     public Event(String name, int budget) {
         this.name = name;
@@ -55,16 +56,24 @@ public class Event {
         return expesne;
     }
 
-//    public void setExpesne(List<Expense> expesne) {
-//        this.expesne = expesne;
-//    }
-
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getArchive() {
+        return archive;
+    }
+
+//    public void setArchive(Boolean archive) {
+//        this.archive = archive;
+//    }
+
+    public void setArchive() {
+        this.archive = !this.archive;
     }
 
     public int getId() {

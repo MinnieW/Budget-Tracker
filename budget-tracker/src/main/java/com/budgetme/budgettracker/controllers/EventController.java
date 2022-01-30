@@ -41,6 +41,14 @@ public class EventController {
         return "events/home";
     }
 
+    @GetMapping("archive")
+    public String archivePage(Model model, Principal principal){
+        User currentUser = userRepository.findByName(principal.getName());
+        List<Event> events = eventRepository.findByUserIdArchived(currentUser.getId());
+        model.addAttribute("events",events);
+        return "events/archive";
+    }
+
     @GetMapping("create")
     public String createEvent(Model model){
         model.addAttribute("title", "Create Event");
@@ -109,5 +117,16 @@ public class EventController {
         return "events/detail";
     }
 
+    @PostMapping("detail")
+    public String archiveEvent(@RequestParam Integer eventId){
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        event.setArchive();
+        eventRepository.save(event);
+        if (event.getArchive()){
+            return "redirect:archive";
+        }
+        return "redirect:detail?eventId=" + event.getId();
+    }
 
 }
