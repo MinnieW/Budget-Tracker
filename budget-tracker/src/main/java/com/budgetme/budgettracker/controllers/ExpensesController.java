@@ -40,6 +40,7 @@ public class ExpensesController {
             return "redirect:/denied";
         }
 
+        model.addAttribute("user",currentUser.getUsername());
         model.addAttribute("event", event);
         model.addAttribute(new Expense());
         return "expenses/create";
@@ -69,6 +70,7 @@ public class ExpensesController {
             return "redirect:/denied";
         }
 
+        model.addAttribute("user",currentUser.getUsername());
         model.addAttribute("title", "Create Expense");
         model.addAttribute("expense",expense);
         return "expenses/edit";
@@ -97,7 +99,8 @@ public class ExpensesController {
         if (!expense.getEvent().getUser().equals(currentUser)){
             return "redirect:/denied";
         }
-        
+
+        model.addAttribute("user",currentUser.getUsername());
         model.addAttribute("expense",expense);
         return "expenses/delete";
     }
