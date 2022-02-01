@@ -38,6 +38,7 @@ public class EventController {
         User currentUser = userRepository.findByName(principal.getName());
         List<Event> events = eventRepository.findByUserId(currentUser.getId());
         model.addAttribute("events",events);
+        model.addAttribute("user",currentUser.getUsername());
         return "events/home";
     }
 
@@ -46,12 +47,13 @@ public class EventController {
         User currentUser = userRepository.findByName(principal.getName());
         List<Event> events = eventRepository.findByUserIdArchived(currentUser.getId());
         model.addAttribute("events",events);
+        model.addAttribute("user",currentUser.getUsername());
         return "events/archive";
     }
 
     @GetMapping("create")
-    public String createEvent(Model model){
-        model.addAttribute("title", "Create Event");
+    public String createEvent(Model model, Principal principal){
+        model.addAttribute("user", principal.getName());
         model.addAttribute(new Event());
         return "events/create";
     }
@@ -77,8 +79,8 @@ public class EventController {
         if (!event.getUser().equals(currentUser)){
             return "redirect:/denied";
         }
+        model.addAttribute("user",currentUser.getUsername());
         model.addAttribute("event",event);
-//        model.addAttribute(new Event());
         return "events/edit";
     }
 
@@ -105,6 +107,7 @@ public class EventController {
             return "redirect:/denied";
         }
 
+        model.addAttribute("user",currentUser.getUsername());
         List<Expense> expense = expenseRepository.findByEventId(eventId);
         model.addAttribute("event", event);
         model.addAttribute("expense",expense);
