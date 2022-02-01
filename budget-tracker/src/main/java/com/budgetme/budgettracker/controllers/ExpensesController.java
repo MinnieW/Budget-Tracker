@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.Optional;
@@ -47,17 +45,18 @@ public class ExpensesController {
     }
 
     @PostMapping("create")
-    public String processExpense(@ModelAttribute @Valid Expense newExpense, Errors errors, @RequestParam Integer eventId){
+    public String processExpense(@ModelAttribute @Valid Expense newExpense, Errors errors, @RequestParam Integer eventId, Model model){
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+
         if (errors.hasErrors()){
+            model.addAttribute("event",event);
             return "expenses/create";
         }
 
-        Optional<Event> result = eventRepository.findById(eventId);
-        Event event = result.get();
         newExpense.setEvent(event);
         expenseRepository.save(newExpense);
         return "redirect:/events/detail?eventId=" + event.getId();
-
     }
 
     @GetMapping("edit")
