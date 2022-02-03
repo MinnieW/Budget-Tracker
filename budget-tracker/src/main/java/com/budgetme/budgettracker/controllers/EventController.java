@@ -98,6 +98,30 @@ public class EventController {
         return "redirect:detail?eventId=" + event.getId();
     }
 
+    @GetMapping("delete")
+    public String deleteEvent(@RequestParam Integer eventId, Model model, Principal principal){
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        User currentUser = userRepository.findByName(principal.getName());
+        if (!event.getUser().equals(currentUser)){
+            return "redirect:/denied";
+        }
+
+        model.addAttribute("user",currentUser.getUsername());
+        model.addAttribute("event",event);
+        return "events/delete";
+    }
+
+    @PostMapping("delete")
+    public String processDeleteEvent(@RequestParam Integer eventId){
+        List<Expense> expense = expenseRepository.findByEventId(eventId);
+        for (int i = 0; i < expense.size(); i++){
+            expenseRepository.deleteById(expense.get(i).getId());
+        }
+        eventRepository.deleteById(eventId);
+        return "events/home";
+    }
+
     @GetMapping("detail")
     public String viewSpecificEvent(@RequestParam Integer eventId, Model model, Principal principal){
         Optional<Event> result = eventRepository.findById(eventId);
