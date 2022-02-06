@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @Controller
 public class HomeController {
@@ -28,7 +29,11 @@ public class HomeController {
     }
 
     @RequestMapping("denied")
-    public String deniedPage(){return "denied";}
+    public String deniedPage(Model model,Principal principal){
+        User currentUser = userRepository.findByName(principal.getName());
+        model.addAttribute("user",currentUser.getUsername());
+        return "denied";
+    }
 
     @GetMapping("register")
     public String registration(Model model){

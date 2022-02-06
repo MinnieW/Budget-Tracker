@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,12 @@ public class EventController {
         List<Event> events = eventRepository.findByUserId(currentUser.getId());
         model.addAttribute("events",events);
         model.addAttribute("user",currentUser.getUsername());
+        List<SharedUser> sharedUsers = sharedUserRepository.findBySharedUserId(currentUser.getId());
+        List<Integer> sharedEventIds = new ArrayList<>();
+        for (int i = 0; i < sharedUsers.size(); i++){
+            sharedEventIds.add(sharedUsers.get(i).getEvent().getId());
+        }
+        model.addAttribute("sharedEvents", eventRepository.findAllById(sharedEventIds));
         return "events/home";
     }
 

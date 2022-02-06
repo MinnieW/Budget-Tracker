@@ -26,8 +26,8 @@
                     <th>Shared Budget Events</th>
                 </tr>
                 </thead>
-                <tr th:each="event : ${events}">
-                    <td><a th:text="${event.name}" th:href="'/events/detail?eventId=' + ${event.id}"></a> </td>
+                <tr th:each="sEvent : ${sharedEvents}">
+                    <td><a th:text="${sEvent.name}" th:href="'/events/detail?eventId=' + ${sEvent.id}"></a> </td>
                 </tr>
             </table>
         </div>
