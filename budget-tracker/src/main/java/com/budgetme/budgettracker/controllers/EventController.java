@@ -3,10 +3,9 @@ package com.budgetme.budgettracker.controllers;
 import com.budgetme.budgettracker.UserPrincipal;
 import com.budgetme.budgettracker.data.EventRepository;
 import com.budgetme.budgettracker.data.ExpenseRepository;
+import com.budgetme.budgettracker.data.SharedUserRepository;
 import com.budgetme.budgettracker.data.UserRepository;
-import com.budgetme.budgettracker.models.Event;
-import com.budgetme.budgettracker.models.Expense;
-import com.budgetme.budgettracker.models.User;
+import com.budgetme.budgettracker.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -32,6 +31,9 @@ public class EventController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SharedUserRepository sharedUserRepository;
 
     @GetMapping("home")
     public String eventHomePage(Model model, Principal principal){
@@ -156,4 +158,47 @@ public class EventController {
         return "redirect:detail?eventId=" + event.getId();
     }
 
+    @GetMapping("share")
+    public String shareEvent(@RequestParam Integer eventId, Model model, Principal principal){
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        User currentUser = userRepository.findByName(principal.getName());
+        if (!event.getUser().equals(currentUser)) {
+            return "redirect:/denied";
+        }
+
+        model.addAttribute(new SharedUser());
+        model.addAttribute("event", event);
+        model.addAttribute("shareType", ShareType.values());
+        model.addAttribute("sharedToUser", userRepository.findAll());
+        model.addAttribute("user",currentUser.getUsername());
+        return "events/share";
+    }
+
+    @PostMapping("share")
+    public String processShareEvent(@ModelAttribute @Valid SharedUser newSharedUser, Errors errors,@RequestParam Integer eventId,
+                                    Model model, Principal principal){
+        User currentUser = userRepository.findByName(principal.getName());
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        model.addAttribute("event",event);
+        if (errors.hasErrors()){
+            model.addAttribute("shareType", ShareType.values());
+            model.addAttribute("sharedToUser", userRepository.findAll());
+            model.addAttribute("user",currentUser.getUsername());
+            return "events/share";
+        }
+
+        SharedUser existingEntry = sharedUserRepository.findByEventUser(newSharedUser.getUser().getId(),eventId);
+        if (existingEntry != null && newSharedUser.getShareType() != existingEntry.getShareType()){
+                existingEntry.setShareType(newSharedUser.getShareType());
+                sharedUserRepository.save(existingEntry);
+                return "redirect:detail?eventId=" + eventId;
+            } else if (existingEntry != null){
+                return "redirect:detail?eventId=" + eventId;
+            }
+
+        sharedUserRepository.save(newSharedUser);
+        return "redirect:detail?eventId=" + eventId;
+    }
 }

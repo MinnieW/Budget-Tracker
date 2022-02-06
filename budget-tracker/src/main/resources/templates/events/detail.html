@@ -61,6 +61,11 @@
             <p align="center" th:if="${event.budget >= amount}" th:text="'Amount left: $' + ${event.budget-amount}"></p>
             <p align="center" th:if="${amount>event.budget}" th:text="'Amount over budget: $' + ${amount-event.budget}"></p>
         </div>
+        <div>
+            <a th:href="'/events/share?eventId=' + ${event.id}">
+                <button class="btn btn-primary">Share Event</button>
+            </a>
+        </div>
     </div>
 </div>
 </body>

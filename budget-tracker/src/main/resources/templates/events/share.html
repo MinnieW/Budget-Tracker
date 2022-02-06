@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body>
+<div th:replace="fragments :: pagetop"></div>
+
+<form method="post" action="/events/share">
+    <div>
+        <label> Event:
+            <select th:field="${sharedUser.event}">
+                <option th:value="${event.id}"
+                        th:text="${event.name}"
+                ></option>
+            </select>
+        </label>
+    </div>
+
+    <div>
+        <label> User:
+            <select th:field="${sharedUser.user}">
+                <option value="">* Select One *</option>
+                <option th:each="user : ${sharedToUser}"
+                        th:value="${user.id}"
+                        th:text="${user.username}"
+                ></option>
+            </select>
+        </label>
+        <p class="error" th:errors="${sharedUser.user}"></p>
+    </div>
+
+    <div>
+        <label> Access:
+            <select th:field="${sharedUser.shareType}">
+                <option value="">* Select One *</option>
+                <option th:each="type : ${shareType}"
+                        th:value="${type}"
+                        th:text="${type.displayName}"
+                ></option>
+            </select>
+        </label>
+        <p class="error" th:errors="${sharedUser.shareType}"></p>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-success">Share Event</button>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-secondary" th:onclick="|window.location.href='/events/detail?eventId=' + ${event.id}|">Cancel</button>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>
