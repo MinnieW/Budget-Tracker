@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -140,6 +141,15 @@ public class EventController {
             return "redirect:/denied";
         }
 
+        List<SharedUser> sharedWithUsers = sharedUserRepository.findBySharedEventId(eventId);
+//        List<Integer> sharedWithUserIds = new ArrayList<>();
+        HashMap<String, String> userWithShareType = new HashMap<>();
+        for (int j=0; j < sharedWithUsers.size(); j++){
+//            sharedWithUserIds.add(sharedWithUsers.get(j).getUser().getId());
+            userWithShareType.put(sharedWithUsers.get(j).getUser().getUsername(),sharedWithUsers.get(j).getShareType().getDisplayName());
+        }
+
+        model.addAttribute("usershare",userWithShareType);
         model.addAttribute("user",currentUser.getUsername());
         List<Expense> expense = expenseRepository.findByEventId(eventId);
         model.addAttribute("event", event);

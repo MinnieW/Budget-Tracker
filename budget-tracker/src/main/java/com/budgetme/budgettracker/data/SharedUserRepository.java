@@ -15,4 +15,6 @@ public interface SharedUserRepository extends JpaRepository<SharedUser, Integer>
     @Query(value="SELECT s FROM SharedUser s WHERE user_id = :userId")
     List<SharedUser> findBySharedUserId(@Param("userId") Integer userId);
 
+    @Query(value="SELECT s FROM SharedUser s WHERE event_id = :eventId")
+    List<SharedUser> findBySharedEventId(@Param("eventId") Integer eventId);
 }
