@@ -53,4 +53,9 @@ public class SharedUser{
     public void setShareType(ShareType shareType) {
         this.shareType = shareType;
     }
+
+    public int getId() {
+        return id;
+    }
+
 }

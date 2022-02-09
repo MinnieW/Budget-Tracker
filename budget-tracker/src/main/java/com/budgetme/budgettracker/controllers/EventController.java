@@ -128,8 +128,14 @@ public class EventController {
         for (int i = 0; i < expense.size(); i++){
             expenseRepository.deleteById(expense.get(i).getId());
         }
+
+        List<SharedUser> sharedUsers = sharedUserRepository.findBySharedEventId(eventId);
+        for (int j = 0; j <sharedUsers.size(); j++){
+            sharedUserRepository.deleteById(sharedUsers.get(j).getId());
+        }
+
         eventRepository.deleteById(eventId);
-        return "events/home";
+        return "redirect:home";
     }
 
     @GetMapping("detail")
