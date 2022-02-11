@@ -85,8 +85,9 @@ public class EventController {
         User currentUser = userRepository.findByName(principal.getName());
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), event.getId());
 
-        if (!event.getUser().equals(currentUser)){
+        if (!event.getUser().equals(currentUser) && (possibleShare == null || possibleShare.getShareType() == ShareType.READ)){
             return "redirect:/denied";
         }
         model.addAttribute("user",currentUser.getUsername());
@@ -143,15 +144,14 @@ public class EventController {
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
         User currentUser = userRepository.findByName(principal.getName());
-        if (!event.getUser().equals(currentUser)){
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), event.getId());
+        if (!event.getUser().equals(currentUser) && possibleShare == null){
             return "redirect:/denied";
         }
 
         List<SharedUser> sharedWithUsers = sharedUserRepository.findBySharedEventId(eventId);
-//        List<Integer> sharedWithUserIds = new ArrayList<>();
         HashMap<String, String> userWithShareType = new HashMap<>();
         for (int j=0; j < sharedWithUsers.size(); j++){
-//            sharedWithUserIds.add(sharedWithUsers.get(j).getUser().getId());
             userWithShareType.put(sharedWithUsers.get(j).getUser().getUsername(),sharedWithUsers.get(j).getShareType().getDisplayName());
         }
 
