@@ -3,10 +3,9 @@ package com.budgetme.budgettracker.controllers;
 import com.budgetme.budgettracker.UserPrincipal;
 import com.budgetme.budgettracker.data.EventRepository;
 import com.budgetme.budgettracker.data.ExpenseRepository;
+import com.budgetme.budgettracker.data.SharedUserRepository;
 import com.budgetme.budgettracker.data.UserRepository;
-import com.budgetme.budgettracker.models.Event;
-import com.budgetme.budgettracker.models.Expense;
-import com.budgetme.budgettracker.models.User;
+import com.budgetme.budgettracker.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,12 +34,21 @@ public class EventController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SharedUserRepository sharedUserRepository;
+
     @GetMapping("home")
     public String eventHomePage(Model model, Principal principal){
         User currentUser = userRepository.findByName(principal.getName());
         List<Event> events = eventRepository.findByUserId(currentUser.getId());
         model.addAttribute("events",events);
         model.addAttribute("user",currentUser.getUsername());
+        List<SharedUser> sharedUsers = sharedUserRepository.findBySharedUserId(currentUser.getId());
+        List<Integer> sharedEventIds = new ArrayList<>();
+        for (int i = 0; i < sharedUsers.size(); i++){
+            sharedEventIds.add(sharedUsers.get(i).getEvent().getId());
+        }
+        model.addAttribute("sharedEvents", eventRepository.findAllById(sharedEventIds));
         return "events/home";
     }
 
@@ -75,8 +85,9 @@ public class EventController {
         User currentUser = userRepository.findByName(principal.getName());
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), event.getId());
 
-        if (!event.getUser().equals(currentUser)){
+        if (!event.getUser().equals(currentUser) && (possibleShare == null || possibleShare.getShareType() == ShareType.READ)){
             return "redirect:/denied";
         }
         model.addAttribute("user",currentUser.getUsername());
@@ -118,8 +129,14 @@ public class EventController {
         for (int i = 0; i < expense.size(); i++){
             expenseRepository.deleteById(expense.get(i).getId());
         }
+
+        List<SharedUser> sharedUsers = sharedUserRepository.findBySharedEventId(eventId);
+        for (int j = 0; j <sharedUsers.size(); j++){
+            sharedUserRepository.deleteById(sharedUsers.get(j).getId());
+        }
+
         eventRepository.deleteById(eventId);
-        return "events/home";
+        return "redirect:home";
     }
 
     @GetMapping("detail")
@@ -127,10 +144,18 @@ public class EventController {
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
         User currentUser = userRepository.findByName(principal.getName());
-        if (!event.getUser().equals(currentUser)){
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), event.getId());
+        if (!event.getUser().equals(currentUser) && possibleShare == null){
             return "redirect:/denied";
         }
 
+        List<SharedUser> sharedWithUsers = sharedUserRepository.findBySharedEventId(eventId);
+        HashMap<String, String> userWithShareType = new HashMap<>();
+        for (int j=0; j < sharedWithUsers.size(); j++){
+            userWithShareType.put(sharedWithUsers.get(j).getUser().getUsername(),sharedWithUsers.get(j).getShareType().getDisplayName());
+        }
+
+        model.addAttribute("usershare",userWithShareType);
         model.addAttribute("user",currentUser.getUsername());
         List<Expense> expense = expenseRepository.findByEventId(eventId);
         model.addAttribute("event", event);
@@ -156,4 +181,47 @@ public class EventController {
         return "redirect:detail?eventId=" + event.getId();
     }
 
+    @GetMapping("share")
+    public String shareEvent(@RequestParam Integer eventId, Model model, Principal principal){
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        User currentUser = userRepository.findByName(principal.getName());
+        if (!event.getUser().equals(currentUser)) {
+            return "redirect:/denied";
+        }
+
+        model.addAttribute(new SharedUser());
+        model.addAttribute("event", event);
+        model.addAttribute("shareType", ShareType.values());
+        model.addAttribute("sharedToUser", userRepository.findAll());
+        model.addAttribute("user",currentUser.getUsername());
+        return "events/share";
+    }
+
+    @PostMapping("share")
+    public String processShareEvent(@ModelAttribute @Valid SharedUser newSharedUser, Errors errors,@RequestParam Integer eventId,
+                                    Model model, Principal principal){
+        User currentUser = userRepository.findByName(principal.getName());
+        Optional<Event> result = eventRepository.findById(eventId);
+        Event event = result.get();
+        model.addAttribute("event",event);
+        if (errors.hasErrors()){
+            model.addAttribute("shareType", ShareType.values());
+            model.addAttribute("sharedToUser", userRepository.findAll());
+            model.addAttribute("user",currentUser.getUsername());
+            return "events/share";
+        }
+
+        SharedUser existingEntry = sharedUserRepository.findByEventUser(newSharedUser.getUser().getId(),eventId);
+        if (existingEntry != null && newSharedUser.getShareType() != existingEntry.getShareType()){
+                existingEntry.setShareType(newSharedUser.getShareType());
+                sharedUserRepository.save(existingEntry);
+                return "redirect:detail?eventId=" + eventId;
+            } else if (existingEntry != null){
+                return "redirect:detail?eventId=" + eventId;
+            }
+
+        sharedUserRepository.save(newSharedUser);
+        return "redirect:detail?eventId=" + eventId;
+    }
 }

@@ -2,10 +2,9 @@ package com.budgetme.budgettracker.controllers;
 
 import com.budgetme.budgettracker.data.EventRepository;
 import com.budgetme.budgettracker.data.ExpenseRepository;
+import com.budgetme.budgettracker.data.SharedUserRepository;
 import com.budgetme.budgettracker.data.UserRepository;
-import com.budgetme.budgettracker.models.Event;
-import com.budgetme.budgettracker.models.Expense;
-import com.budgetme.budgettracker.models.User;
+import com.budgetme.budgettracker.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,13 +27,17 @@ public class ExpensesController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SharedUserRepository sharedUserRepository;
+
     @GetMapping("create")
     public String createExpense(@RequestParam Integer eventId, Model model, Principal principal){
         User currentUser = userRepository.findByName(principal.getName());
         Optional<Event> result = eventRepository.findById(eventId);
         Event event = result.get();
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), event.getId());
 
-        if (!event.getUser().equals(currentUser)){
+        if (!event.getUser().equals(currentUser) && (possibleShare == null || possibleShare.getShareType() == ShareType.READ)){
             return "redirect:/denied";
         }
 
@@ -64,8 +67,9 @@ public class ExpensesController {
         User currentUser = userRepository.findByName(principal.getName());
         Optional<Expense> result = expenseRepository.findById(expenseId);
         Expense expense = result.get();
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), expense.getEvent().getId());
 
-        if (!expense.getEvent().getUser().equals(currentUser)){
+        if (!expense.getEvent().getUser().equals(currentUser) && (possibleShare == null || possibleShare.getShareType() == ShareType.READ)){
             return "redirect:/denied";
         }
 
@@ -94,8 +98,9 @@ public class ExpensesController {
         User currentUser = userRepository.findByName(principal.getName());
         Optional<Expense> result = expenseRepository.findById(expenseId);
         Expense expense = result.get();
+        SharedUser possibleShare = sharedUserRepository.findByEventUser(currentUser.getId(), expense.getEvent().getId());
 
-        if (!expense.getEvent().getUser().equals(currentUser)){
+        if (!expense.getEvent().getUser().equals(currentUser) && (possibleShare == null || possibleShare.getShareType() == ShareType.READ)){
             return "redirect:/denied";
         }
 
