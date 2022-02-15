@@ -4,25 +4,32 @@
 </head>
 <body>
 <div th:replace="fragments :: pagetop"></div>
-
-<h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
 <div class="container">
-    <div class="row">
-        <a th:if="${!event.archive}" th:href="'/events/edit?eventId=' + ${event.id}">
-            <button class="btn btn-primary">Edit Event</button>
-        </a>
-        <form method="post" action="/events/detail" th:if="${!event.archive}">
-            <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-warning">Archive Event</button>
-        </form>
-        <form method="post" action="/events/detail" th:if="${event.archive}">
-            <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-warning">Unarchive Event</button>
-        </form>
-        <a th:href="'/events/delete?eventId=' + ${event.id}">
-            <button class="btn btn-dark">Delete Event</button>
-        </a>
-    </div>
+    <h1 align="center" th:text="'Event: ' + ${event.name}"></h1>
 </div>
 <div class="container">
+    <div class="row">
+        <div class="col" style="text-align:right">
+            <a th:if="${!event.archive}" th:href="'/events/edit?eventId=' + ${event.id}">
+                <button class="btn btn-primary">Edit Event</button>
+            </a>
+        </div>
+        <div class="col" style="text-align:center">
+            <form method="post" action="/events/detail" th:if="${!event.archive}">
+                <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-warning">Archive Event</button>
+            </form>
+            <form method="post" action="/events/detail" th:if="${event.archive}">
+                <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-warning">Unarchive Event</button>
+            </form>
+        </div>
+        <div class="col" style="text-align:left">
+            <a th:href="'/events/delete?eventId=' + ${event.id}">
+                <button class="btn btn-dark">Delete Event</button>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="container" style="padding-top: 25px;">
     <div class="row">
         <div class="col">
             <h2 align="center">Expenses</h2>
@@ -37,7 +44,7 @@
                 </thead>
                 <tr th:each="expenses : ${expense}">
                     <td th:text="${expenses.name}"></td>
-                    <td th:text="${expenses.amount}"></td>
+                    <td th:text="'$'+${expenses.amount}"></td>
                     <td th:if="${!event.archive}">
                         <a th:href="'/expenses/edit?expenseId=' + ${expenses.id}">Edit</a>
                     </td>
@@ -46,7 +53,7 @@
                     </td>
                 </tr>
             </table>
-            <button th:if="${!event.archive}" th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|">Add Expense</button>
+            <button th:if="${!event.archive}" th:onclick="|window.location.href='/expenses/create?eventId=' + ${event.id}|" class="btn btn-primary">Add Expense</button>
         </div>
 
         <div class="col">

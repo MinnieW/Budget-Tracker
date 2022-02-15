@@ -5,25 +5,25 @@
 <div th:replace="fragments :: pagetop"></div>
 
 <form method="post">
-    <div>
+    <div class="form-group" style="text-align:center">
         <label>Event Name
-            <input th:field="${event.name}">
+            <input th:field="${event.name}" class="form-control">
         </label>
         <p th:errors="${event.name}"></p>
     </div>
 
-    <div>
+    <div class="form-group" style="text-align:center">
         <label>Budget $
-            <input th:field="${event.budget}">
+            <input th:field="${event.budget}" class="form-control">
         </label>
         <p th:errors="${event.budget}"></p>
     </div>
-    <div class="=row">
-        <div class="col">
+    <div class="row">
+        <div class="col" style="text-align:right">
             <input type="submit" value="Update Event" class="btn btn-success">
         </div>
         <div class="col">
-            <button type="button" class="btn btn-secondary" th:onclick="history.back()">Cancel</button>
+            <button type="button" class="btn btn-secondary" th:onclick="|window.location.href='/events/detail?eventId=' + ${event.id}|">Cancel</button>
         </div>
     </div>
 

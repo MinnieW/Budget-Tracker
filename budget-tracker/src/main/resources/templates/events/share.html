@@ -5,7 +5,7 @@
 <div th:replace="fragments :: pagetop"></div>
 
 <form method="post" action="/events/share">
-    <div>
+    <div style="padding-bottom: 10px;text-align:center">
         <label> Event:
             <select th:field="${sharedUser.event}">
                 <option th:value="${event.id}"
@@ -15,7 +15,7 @@
         </label>
     </div>
 
-    <div>
+    <div style="padding-bottom: 10px;text-align:center">
         <label> User:
             <select th:field="${sharedUser.user}">
                 <option value="">* Select One *</option>
@@ -28,7 +28,7 @@
         <p class="error" th:errors="${sharedUser.user}"></p>
     </div>
 
-    <div>
+    <div style="padding-bottom: 10px;text-align:center">
         <label> Access:
             <select th:field="${sharedUser.shareType}">
                 <option value="">* Select One *</option>
@@ -42,7 +42,7 @@
     </div>
 
     <div class="row">
-        <div class="col">
+        <div class="col" style="text-align:right">
             <button type="submit" name="eventId" th:value="${event.id}" class="btn btn-success">Share Event</button>
         </div>
         <div class="col">

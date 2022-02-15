@@ -12,18 +12,17 @@
 
 <body>
 
-<div class="container" th:fragment="pagetop">
+<div th:fragment="pagetop" style="background:#e3f2e3;padding-bottom: 10px;padding-top: 5px;">
     <div class="row">
-        <div class="col">
+        <div class="col" style="text-align:center">
         <a href="/events/home">
-            <img src="/Budget_me_logo.png" width="30" height="30" alt="">
+            <img src="/Budget_me_logo.png" width="40" height="40" alt="">
         </a>
-<!--            <img src="/practice.png" width="30" height="30" alt="">-->
         </div>
-        <div class="col">
-        <button onclick="location.href='/events/create'">Create an Event</button>
+        <div class="col" style="text-align:center">
+        <button class="btn btn-success" onclick="location.href='/events/create'">Create an Event</button>
         </div>
-        <div class="col">
+        <div class="col" style="text-align:center">
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" th:text="${user}">
                     User
