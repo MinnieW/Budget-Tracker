@@ -5,23 +5,27 @@
     <title></title>
 </head>
 <body>
+<div>
+    <h1>Create an Account</h1>
+</div>
+<div>
+    <form method="post">
+        <div>
+            <label>Username
+                <input th:field="${user.username}" placeholder="username"/>
+            </label>
+            <p th:errors="${user.username}"></p>
+        </div>
+        <div>
+            <label>Password
+                <input th:field="${user.password}" placeholder=" unique password" type="password" />
+            </label>
+            <p th:errors="${user.password}"></p>
+        </div>
 
-<form method="post">
-    <div>
-        <label>Username
-            <input th:field="${user.username}" />
-        </label>
-        <p th:errors="${user.username}"></p>
-    </div>
-    <div>
-        <label>Password
-            <input th:field="${user.password}" type="password" />
-        </label>
-        <p th:errors="${user.password}"></p>
-    </div>
-
-    <input type="submit" value="Register" />
-</form>
-
+<!--        <button class="btn btn-success" type="submit">Register</button>-->
+        <input type="submit" class="btn btn-success" value="Register" />
+    </form>
+</div>
 </body>
 </html>
